@@ -3,24 +3,14 @@ param adminUsername string = 'admin_lcl'
 param adminPassword string = 'Baghdad123' // For security, use Azure Key Vault in production
 
 var vmName = 'STHPSQLSOXN02'
-var vnetName = 'sth-scus-pd-01-vnet'
-var subnetName = 'sth-scus-exp-01-snet'
 var nicName = '${vmName}-nic'
 var osDiskName = '${vmName}-os'
 var dataDisk1Name = '${vmName}-Data'
 var dataDisk2Name = '${vmName}-Logs'
 var dataDisk3Name = '${vmName}-TempDB'
 
-// Reference the existing vNet in a different resource group
-resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
-  name: vnetName
-  scope: resourceGroup('sth-network-scus-pd-rg')
-}
-
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-05-01' existing = {
-  parent: vnet
-  name: subnetName
-}
+// Fully qualified subnet ID (in another resource group)
+var subnetId = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-pd-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-pd-01-vnet/subnets/sth-scus-exp-01-snet'
 
 resource nic 'Microsoft.Network/networkInterfaces@2021-05-01' = {
   name: nicName
@@ -31,7 +21,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-05-01' = {
         name: 'ipconfig1'
         properties: {
           subnet: {
-            id: subnet.id
+            id: subnetId
           }
           privateIPAllocationMethod: 'Dynamic'
         }
