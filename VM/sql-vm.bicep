@@ -1,4 +1,3 @@
-
 param location string = 'southcentralus'
 param adminUsername string = 'admin_lcl'
 param adminPassword string = 'Baghdad123' // For security, use Azure Key Vault in production
@@ -12,8 +11,10 @@ var dataDisk1Name = '${vmName}-Data'
 var dataDisk2Name = '${vmName}-Logs'
 var dataDisk3Name = '${vmName}-TempDB'
 
+// Reference the existing vNet in a different resource group
 resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
   name: vnetName
+  scope: resourceGroup('sth-network-scus-pd-rg')
 }
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-05-01' existing = {
