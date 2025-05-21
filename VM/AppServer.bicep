@@ -5,9 +5,6 @@ param adminPassword string = 'Test123' // For security, use Azure Key Vault in p
 var vmName = 'STHPJETRPT01'
 var nicName = '${vmName}-nic'
 var osDiskName = '${vmName}-os'
-// var dataDisk1Name = '${vmName}-Data'
-// var dataDisk2Name = '${vmName}-Logs'
-// var dataDisk3Name = '${vmName}-TempDB'
 
 // Fully qualified subnet ID (in another resource group)
 var subnetId = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-pd-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-pd-01-vnet/subnets/sth-scus-exp-01-snet'
