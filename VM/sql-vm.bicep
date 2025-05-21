@@ -1,6 +1,6 @@
 param location string = 'southcentralus'
 param adminUsername string = 'admin_lcl'
-param adminPassword string = 'Baghdad123' // For security, use Azure Key Vault in production
+param adminPassword string = 'Test123' // For security, use Azure Key Vault in production
 
 var vmName = 'STHPSQLSOXN02'
 var nicName = '${vmName}-nic'
