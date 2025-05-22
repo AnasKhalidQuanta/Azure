@@ -2,7 +2,7 @@ param applicationGateways_sth_sepms_dev_appgw_name string = 'sth-sepms-dev-appgw
 param virtualNetworks_sth_scus_dv_01_vnet_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-dv-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-dv-01-vnet'
 param publicIPAddresses_sth_sepms_dev_pip_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-SEPMS-dev-rg/providers/Microsoft.Network/publicIPAddresses/sth-sepms-dev-pip'
 
-resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Network/applicationGateways@2024-05-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
   name: applicationGateways_sth_sepms_dev_appgw_name
   location: 'southcentralus'
   tags: {
@@ -93,14 +93,14 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
         name: 'sepmsDevListener'
         properties: {
           frontendIPConfiguration: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'appGwPublicFrontendIpIPv4')'
+            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'appGwPublicFrontendIpIPv4')
           }
           frontendPort: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGateways_sth_sepms_dev_appgw_name, 'port_443')'
+            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGateways_sth_sepms_dev_appgw_name, 'port_443')
           }
           protocol: 'Https'
           sslCertificate: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/sslCertificates', applicationGateways_sth_sepms_dev_appgw_name, '${applicationGateways_sth_sepms_dev_appgw_name}-cert')'
+            id: resourceId('Microsoft.Network/applicationGateways/sslCertificates', applicationGateways_sth_sepms_dev_appgw_name, '${applicationGateways_sth_sepms_dev_appgw_name}-cert')
           }
           hostName: 'sepms-dev.thestrongholdcompanies.com'
           requireServerNameIndication: true
@@ -110,14 +110,14 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
         name: 'sth-sepms-dev-Listener'
         properties: {
           frontendIPConfiguration: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'appGwPublicFrontendIpIPv4')'
+            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'appGwPublicFrontendIpIPv4')
           }
           frontendPort: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGateways_sth_sepms_dev_appgw_name, 'port_443')'
+            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGateways_sth_sepms_dev_appgw_name, 'port_443')
           }
           protocol: 'Https'
           sslCertificate: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/sslCertificates', applicationGateways_sth_sepms_dev_appgw_name, '${applicationGateways_sth_sepms_dev_appgw_name}-cert')'
+            id: resourceId('Microsoft.Network/applicationGateways/sslCertificates', applicationGateways_sth_sepms_dev_appgw_name, '${applicationGateways_sth_sepms_dev_appgw_name}-cert')
           }
           hostName: 'sth-sepms-dev.thestrongholdcompanies.com'
           requireServerNameIndication: true
@@ -131,13 +131,13 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
           ruleType: 'Basic'
           priority: 1
           httpListener: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsDevListener')'
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsDevListener')
           }
           backendAddressPool: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsdev-bpool')'
+            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsdev-bpool')
           }
           backendHttpSettings: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsDev-bdsettings')'
+            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGateways_sth_sepms_dev_appgw_name, 'sepmsDev-bdsettings')
           }
         }
       }
@@ -147,10 +147,10 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
           ruleType: 'Basic'
           priority: 2
           httpListener: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGateways_sth_sepms_dev_appgw_name, 'sth-sepms-dev-Listener')'
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGateways_sth_sepms_dev_appgw_name, 'sth-sepms-dev-Listener')
           }
           redirectConfiguration: {
-            id: 'resourceId('Microsoft.Network/applicationGateways/redirectConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'sth-sepms-dev-rtrule')'
+            id: resourceId('Microsoft.Network/applicationGateways/redirectConfigurations', applicationGateways_sth_sepms_dev_appgw_name, 'sth-sepms-dev-rtrule')
           }
         }
       }
