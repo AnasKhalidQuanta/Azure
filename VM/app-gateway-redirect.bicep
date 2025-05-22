@@ -13,11 +13,7 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
     'project-name': 'SEPMS Inspection App'
     owner: 'STH IT Infrastructure'
   }
-  zones: [
-    '1'
-    '2'
-    '3'
-  ]
+  zones: ['1', '2', '3']
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -33,7 +29,6 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
     gatewayIPConfigurations: [
       {
         name: 'appGatewayIpConfig'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/gatewayIPConfigurations/appGatewayIpConfig'
         properties: {
           subnet: {
             id: '${virtualNetworks_sth_scus_dv_01_vnet_externalid}/subnets/sth-scus-dv-appgw-01-snet'
@@ -44,19 +39,14 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
     sslCertificates: [
       {
         name: '${applicationGateways_sth_sepms_dev_appgw_name}-cert'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
         properties: {
           keyVaultSecretId: 'https://sth-sepms-shd-kv.vault.azure.net/secrets/sth-Wildcard'
         }
       }
     ]
-    trustedRootCertificates: []
-    trustedClientCertificates: []
-    sslProfiles: []
     frontendIPConfigurations: [
       {
         name: 'appGwPublicFrontendIpIPv4'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: {
@@ -68,7 +58,6 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
     frontendPorts: [
       {
         name: 'port_443'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendPorts/port_443'
         properties: {
           port: 443
         }
@@ -77,7 +66,6 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
     backendAddressPools: [
       {
         name: 'sepmsdev-bpool'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendAddressPools/sepmsdev-bpool'
         properties: {
           backendAddresses: [
             {
@@ -87,11 +75,9 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
         }
       }
     ]
-    loadDistributionPolicies: []
     backendHttpSettingsCollection: [
       {
         name: 'sepmsDev-bdsettings'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendHttpSettingsCollection/sepmsDev-bdsettings'
         properties: {
           port: 443
           protocol: 'Https'
@@ -105,11 +91,9 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
         }
       }
     ]
-    backendSettingsCollection: []
     httpListeners: [
       {
         name: 'sepmsDevListener'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sepmsDevListener'
         properties: {
           frontendIPConfiguration: {
             id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
@@ -122,14 +106,11 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
             id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
           }
           hostName: 'sepms-dev.thestrongholdcompanies.com'
-          hostNames: []
           requireServerNameIndication: true
-          customErrorConfigurations: []
         }
       }
       {
         name: 'sth-sepms-dev-Listener'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sth-sepms-dev-Listener'
         properties: {
           frontendIPConfiguration: {
             id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
@@ -142,18 +123,13 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
             id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
           }
           hostName: 'sth-sepms-dev.thestrongholdcompanies.com'
-          hostNames: []
           requireServerNameIndication: true
-          customErrorConfigurations: []
         }
       }
     ]
-    listeners: []
-    urlPathMaps: []
     requestRoutingRules: [
       {
         name: 'sepmsdev-rtrule'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sepmsdev-rtrule'
         properties: {
           ruleType: 'Basic'
           priority: 1
@@ -170,7 +146,6 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
       }
       {
         name: 'sth-sepms-dev-rtrule'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sth-sepms-dev-rtrule'
         properties: {
           ruleType: 'Basic'
           priority: 2
@@ -183,11 +158,9 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
         }
       }
     ]
-    routingRules: []
     probes: [
       {
         name: 'sepmsDev-bdsettings75998b19-c4aa-4b10-92ce-97cbad7cb03_'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/probes/sepmsDev-bdsettings75998b19-c4aa-4b10-92ce-97cbad7cb03_'
         properties: {
           protocol: 'Https'
           host: 'sth-sepms-dev.thestrongholdcompanies.com'
@@ -198,32 +171,22 @@ resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Networ
           pickHostNameFromBackendHttpSettings: false
           minServers: 0
           match: {
-            statusCodes: [
-              '200-399'
-            ]
+            statusCodes: ['200-399']
           }
         }
       }
     ]
-    rewriteRuleSets: []
     redirectConfigurations: [
       {
         name: 'sth-sepms-dev-rtrule'
-        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/redirectConfigurations/sth-sepms-dev-rtrule'
         properties: {
           redirectType: 'Temporary'
           targetUrl: 'https://sepms-dev.thestrongholdcompanies.com'
           includePath: true
           includeQueryString: true
-          requestRoutingRules: [
-            {
-              id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sth-sepms-dev-rtrule'
-            }
-          ]
         }
       }
     ]
-    privateLinkConfigurations: []
     enableHttp2: true
     autoscaleConfiguration: {
       minCapacity: 0
