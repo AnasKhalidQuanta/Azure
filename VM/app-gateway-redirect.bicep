@@ -1,5 +1,5 @@
 param applicationGateways_sth_sepms_dev_appgw_name string = 'sth-sepms-dev-appgw'
-param virtualNetworks_sth_scus_dv_01_vnet_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-dv-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-dv-01-vnet'
+param virtualNetworks_sth_scus_dv_01_vnet_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-pd-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-dv-01-vnet'
 param publicIPAddresses_sth_sepms_dev_pip_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-SEPMS-dev-rg/providers/Microsoft.Network/publicIPAddresses/sth-sepms-dev-pip'
 
 resource applicationGateway 'Microsoft.Network/applicationGateways@2024-05-01' = {
