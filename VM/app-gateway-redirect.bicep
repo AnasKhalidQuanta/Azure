@@ -1,0 +1,233 @@
+param applicationGateways_sth_sepms_dev_appgw_name string = 'sth-sepms-dev-appgw'
+param virtualNetworks_sth_scus_dv_01_vnet_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-network-scus-dv-rg/providers/Microsoft.Network/virtualNetworks/sth-scus-dv-01-vnet'
+param publicIPAddresses_sth_sepms_dev_pip_externalid string = '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourceGroups/sth-SEPMS-dev-rg/providers/Microsoft.Network/publicIPAddresses/sth-sepms-dev-pip'
+
+resource applicationGateways_sth_sepms_dev_appgw_name_resource 'Microsoft.Network/applicationGateways@2024-05-01' = {
+  name: applicationGateways_sth_sepms_dev_appgw_name
+  location: 'southcentralus'
+  tags: {
+    environment: 'Dev'
+    'external-facing': 'Yes'
+    'regulatory-data': 'No'
+    'critical-infrastructure': 'No'
+    'project-name': 'SEPMS Inspection App'
+    owner: 'STH IT Infrastructure'
+  }
+  zones: [
+    '1'
+    '2'
+    '3'
+  ]
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '/subscriptions/51efe03c-14a1-41c3-99f5-2452f128d82f/resourcegroups/sth-SEPMS-dev-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/sth-SEPMS-dev-id-appcs': {}
+    }
+  }
+  properties: {
+    sku: {
+      name: 'Standard_v2'
+      tier: 'Standard_v2'
+      family: 'Generation_2'
+    }
+    gatewayIPConfigurations: [
+      {
+        name: 'appGatewayIpConfig'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/gatewayIPConfigurations/appGatewayIpConfig'
+        properties: {
+          subnet: {
+            id: '${virtualNetworks_sth_scus_dv_01_vnet_externalid}/subnets/sth-scus-dv-appgw-01-snet'
+          }
+        }
+      }
+    ]
+    sslCertificates: [
+      {
+        name: '${applicationGateways_sth_sepms_dev_appgw_name}-cert'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
+        properties: {
+          keyVaultSecretId: 'https://sth-sepms-shd-kv.vault.azure.net/secrets/sth-Wildcard'
+        }
+      }
+    ]
+    trustedRootCertificates: []
+    trustedClientCertificates: []
+    sslProfiles: []
+    frontendIPConfigurations: [
+      {
+        name: 'appGwPublicFrontendIpIPv4'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
+        properties: {
+          privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: {
+            id: publicIPAddresses_sth_sepms_dev_pip_externalid
+          }
+        }
+      }
+    ]
+    frontendPorts: [
+      {
+        name: 'port_443'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendPorts/port_443'
+        properties: {
+          port: 443
+        }
+      }
+    ]
+    backendAddressPools: [
+      {
+        name: 'sepmsdev-bpool'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendAddressPools/sepmsdev-bpool'
+        properties: {
+          backendAddresses: [
+            {
+              fqdn: 'sth-sepms-dev-quantaservices.msappproxy.net'
+            }
+          ]
+        }
+      }
+    ]
+    loadDistributionPolicies: []
+    backendHttpSettingsCollection: [
+      {
+        name: 'sepmsDev-bdsettings'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendHttpSettingsCollection/sepmsDev-bdsettings'
+        properties: {
+          port: 443
+          protocol: 'Https'
+          cookieBasedAffinity: 'Disabled'
+          hostName: 'sth-sepms-dev.thestrongholdcompanies.com'
+          pickHostNameFromBackendAddress: false
+          requestTimeout: 20
+          probe: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/probes/sepmsDev-bdsettings75998b19-c4aa-4b10-92ce-97cbad7cb03_'
+          }
+        }
+      }
+    ]
+    backendSettingsCollection: []
+    httpListeners: [
+      {
+        name: 'sepmsDevListener'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sepmsDevListener'
+        properties: {
+          frontendIPConfiguration: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
+          }
+          frontendPort: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendPorts/port_443'
+          }
+          protocol: 'Https'
+          sslCertificate: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
+          }
+          hostName: 'sepms-dev.thestrongholdcompanies.com'
+          hostNames: []
+          requireServerNameIndication: true
+          customErrorConfigurations: []
+        }
+      }
+      {
+        name: 'sth-sepms-dev-Listener'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sth-sepms-dev-Listener'
+        properties: {
+          frontendIPConfiguration: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendIPConfigurations/appGwPublicFrontendIpIPv4'
+          }
+          frontendPort: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/frontendPorts/port_443'
+          }
+          protocol: 'Https'
+          sslCertificate: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/sslCertificates/${applicationGateways_sth_sepms_dev_appgw_name}-cert'
+          }
+          hostName: 'sth-sepms-dev.thestrongholdcompanies.com'
+          hostNames: []
+          requireServerNameIndication: true
+          customErrorConfigurations: []
+        }
+      }
+    ]
+    listeners: []
+    urlPathMaps: []
+    requestRoutingRules: [
+      {
+        name: 'sepmsdev-rtrule'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sepmsdev-rtrule'
+        properties: {
+          ruleType: 'Basic'
+          priority: 1
+          httpListener: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sepmsDevListener'
+          }
+          backendAddressPool: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendAddressPools/sepmsdev-bpool'
+          }
+          backendHttpSettings: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/backendHttpSettingsCollection/sepmsDev-bdsettings'
+          }
+        }
+      }
+      {
+        name: 'sth-sepms-dev-rtrule'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sth-sepms-dev-rtrule'
+        properties: {
+          ruleType: 'Basic'
+          priority: 2
+          httpListener: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/httpListeners/sth-sepms-dev-Listener'
+          }
+          redirectConfiguration: {
+            id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/redirectConfigurations/sth-sepms-dev-rtrule'
+          }
+        }
+      }
+    ]
+    routingRules: []
+    probes: [
+      {
+        name: 'sepmsDev-bdsettings75998b19-c4aa-4b10-92ce-97cbad7cb03_'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/probes/sepmsDev-bdsettings75998b19-c4aa-4b10-92ce-97cbad7cb03_'
+        properties: {
+          protocol: 'Https'
+          host: 'sth-sepms-dev.thestrongholdcompanies.com'
+          path: '/'
+          interval: 30
+          timeout: 30
+          unhealthyThreshold: 3
+          pickHostNameFromBackendHttpSettings: false
+          minServers: 0
+          match: {
+            statusCodes: [
+              '200-399'
+            ]
+          }
+        }
+      }
+    ]
+    rewriteRuleSets: []
+    redirectConfigurations: [
+      {
+        name: 'sth-sepms-dev-rtrule'
+        id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/redirectConfigurations/sth-sepms-dev-rtrule'
+        properties: {
+          redirectType: 'Temporary'
+          targetUrl: 'https://sepms-dev.thestrongholdcompanies.com'
+          includePath: true
+          includeQueryString: true
+          requestRoutingRules: [
+            {
+              id: '${applicationGateways_sth_sepms_dev_appgw_name_resource.id}/requestRoutingRules/sth-sepms-dev-rtrule'
+            }
+          ]
+        }
+      }
+    ]
+    privateLinkConfigurations: []
+    enableHttp2: true
+    autoscaleConfiguration: {
+      minCapacity: 0
+      maxCapacity: 2
+    }
+  }
+}
